@@ -7,53 +7,40 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EmployeesList.Data;
 using EmployeesList.Models;
+using EmployeesList.Servises;
+using EmployeesList.Interfaces;
 
 namespace EmployeesList.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly EmployeesListContext _context;
+        
+        private readonly IEmployeeService employeeService;
 
-        public EmployeesController(EmployeesListContext context)
+        public EmployeesController(IEmployeeService employeeService)
         {
-            _context = context;
+           
+            this.employeeService = employeeService;
         }
 
-        // GET: Employees
-      
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index()
         {
-            if (_context.Employee == null)
-            {
-                return Problem("Entity set 'EmployeesListContext.Employee'  is null.");
-            }
+            var result = await employeeService.GetEmployees();
+           
+            return View(result);
 
-            var employee = from m in _context.Employee
-                         select m;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                employee = employee.Where(s => s.Name!.Contains(searchString));
-            }
-
-            return View(await employee.ToListAsync());
         }
 
-        // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
+    // GET: Employees/Details/5
+    public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Employee == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var employee = await employeeService.GetEmployee(id);
             if (employee == null)
             {
                 return NotFound();
             }
+
 
             return View(employee);
         }
@@ -73,8 +60,7 @@ namespace EmployeesList.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
+                await employeeService.CreateEmployee(employee);
                 return RedirectToAction(nameof(Index));
             }
             //добавить проверку на одинаковых пользователей
@@ -84,12 +70,12 @@ namespace EmployeesList.Controllers
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Employee == null)
+            if (id == null )
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await employeeService.GetEmployee(id);
             if (employee == null)
             {
                 return NotFound();
@@ -111,22 +97,8 @@ namespace EmployeesList.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await employeeService.UpdateEmployee(employee);
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
@@ -135,13 +107,12 @@ namespace EmployeesList.Controllers
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Employee == null)
+            if (id == null )
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var employee = await employeeService.GetEmployee(id);
             if (employee == null)
             {
                 return NotFound();
@@ -153,25 +124,17 @@ namespace EmployeesList.Controllers
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            if (_context.Employee == null)
+            if (Models.Employee.Equals == null)
             {
                 return Problem("Entity set 'EmployeesListContext.Employee'  is null.");
             }
-            var employee = await _context.Employee.FindAsync(id);
-            if (employee != null)
-            {
-                _context.Employee.Remove(employee);
-            }
+             await employeeService.RemoveEmployee(id);
             
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
-        {
-          return (_context.Employee?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        
     }
 }

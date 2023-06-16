@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using EmployeesList.Data;
+﻿using EmployeesList.Data;
+using EmployeesList.Interfaces;
+using EmployeesList.Servises;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("EmployeesListContext");
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<EmployeesListContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IEmployeeService, EmployeeService>();
+builder.Services.AddTransient<IEmployeesListContext, EmployeesListContext>();
 
 var app = builder.Build();
 

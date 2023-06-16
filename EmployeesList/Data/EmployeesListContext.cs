@@ -7,7 +7,7 @@ using EmployeesList.Models;
 
 namespace EmployeesList.Data
 {
-    public class EmployeesListContext : DbContext
+    public class EmployeesListContext : DbContext, IEmployeesListContext
     {
         public EmployeesListContext (DbContextOptions<EmployeesListContext> options)
             : base(options)
