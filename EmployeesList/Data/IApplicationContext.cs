@@ -7,8 +7,10 @@ using EmployeesList.Models;
 
 namespace EmployeesList.Data
 {
-    public interface IEmployeesListContext 
+    public interface IApplicationContext 
     {
          DbSet<Employee> Employee { get; set; }
+        DbSet<Children> Children { get; set; }
+
     }
 }

@@ -9,9 +9,13 @@ using EmployeesList.Data;
 using EmployeesList.Models;
 using EmployeesList.Servises;
 using EmployeesList.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace EmployeesList.Controllers
+
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
         
@@ -36,6 +40,7 @@ namespace EmployeesList.Controllers
     public async Task<IActionResult> Details(int? id)
         {
             var employee = await employeeService.GetEmployee(id);
+            ViewData["Emploee"] = employee;
             if (employee == null)
             {
                 return NotFound();

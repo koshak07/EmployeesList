@@ -1,7 +1,9 @@
 ﻿@model EmployeesList.Models.Employee
 
 @{
+
     ViewData["Title"] = "Details";
+   var childrens = (IEnumerable<Children>) ViewData["Emloyee"] ;
 }
 
 <h1>Details</h1>
@@ -45,4 +47,53 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div>
+
+<div>
+    @if (childrens.Count() > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Ф.И.О.
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(childrens => childrens.DateОfBirth)
+                    </th>
+                    
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+
+                @foreach (var item in childrens)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(item => item.Fullname)</a>
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateОfBirth)
+                        </td>
+                        
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>Нет данных для отображения</h3>
+    }
 </div>

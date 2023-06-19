@@ -7,13 +7,14 @@ using EmployeesList.Models;
 
 namespace EmployeesList.Data
 {
-    public class EmployeesListContext : DbContext, IEmployeesListContext
+    public class ApplicationContext : DbContext, IApplicationContext
     {
-        public EmployeesListContext (DbContextOptions<EmployeesListContext> options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
         }
 
         public DbSet<Employee> Employee { get; set; } = default!;
+        public DbSet<Children> Children { get; set; }
     }
 }

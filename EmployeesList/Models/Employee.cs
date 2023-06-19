@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace EmployeesList.Models
 {
@@ -16,7 +17,8 @@ namespace EmployeesList.Models
         [DataType(DataType.Date)]
         public DateTime DateОfBirth { get; set; }
         public string? Position { get; set; }
-       
+        public ICollection<Children> Childrens { get; set; }
+
 
 
     }

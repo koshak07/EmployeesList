@@ -14,11 +14,13 @@ namespace EmployeesList.Servises
     public class EmployeeService : IEmployeeService
 
     {
-        private EmployeesListContext _context;
+        private ApplicationContext _context;
+        
 
-        public EmployeeService(EmployeesListContext context)
+        public EmployeeService(ApplicationContext context)
         {
             _context = context;
+           
         }
 
         public async Task<List<Employee>> GetEmployees()
@@ -82,6 +84,10 @@ namespace EmployeesList.Servises
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Children>> GetChildren()
+        {
+            return await _context.Children.ToListAsync();
+        }
     }
     }
 
