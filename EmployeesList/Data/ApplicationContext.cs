@@ -15,6 +15,6 @@ namespace EmployeesList.Data
         }
 
         public DbSet<Employee> Employee { get; set; } = default!;
-        public DbSet<Children> Children { get; set; }
+        public DbSet<Children> Children { get; set; } = default!;
     }
 }

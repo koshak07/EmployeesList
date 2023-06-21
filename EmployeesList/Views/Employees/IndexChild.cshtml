@@ -1,14 +1,15 @@
-﻿@model IEnumerable<EmployeesList.Models.Employee>
+﻿@model IEnumerable<EmployeesList.Models.Children>
 
 @{
-    ViewData["Title"] = "List Employees";
+    ViewData["Title"] = "Create Child";
 }
 
-<h1>List Employees</h1>
+<h1>Child List</h1>
 
 <p>
-    <a asp-action="Create">Create Employee</a>
+    <a asp-action="CreateChild">Create New Child </a>
 </p>
+
 
 
 @if (Model.Count() > 0)
@@ -23,9 +24,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.DateОfBirth)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Position)
-                </th>
+
                 <th></th>
             </tr>
         </thead>
@@ -37,20 +36,19 @@
             {
                 <tr>
                     <td>
-                        <a asp-action="IndexChild" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Fullname)</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" >@Html.DisplayFor(modelItem => item.Fullname)</a>
                     </td>
 
                     <td>
                         @Html.DisplayFor(modelItem => item.DateОfBirth)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Position)
-                    </td>
+
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
+                        <a asp-action="Details" asp-route-id="@item.EmployeeId">Back To Parents</a> 
                 </tr>
             }
 

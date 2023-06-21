@@ -17,7 +17,7 @@ namespace EmployeesList.Models
         [DataType(DataType.Date)]
         public DateTime DateОfBirth { get; set; }
         public string? Position { get; set; }
-        public ICollection<Children> Childrens { get; set; }
+        public ICollection<Children>? Childrens { get; set; }
 
 
 

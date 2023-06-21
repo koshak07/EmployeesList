@@ -11,18 +11,49 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EmployeesList.Migrations
 {
-    [DbContext(typeof(EmployeesListContext))]
-    [Migration("20230614094107_FixFeel")]
-    partial class FixFeel
+    [DbContext(typeof(ApplicationContext))]
+    [Migration("20230621082313_initialCreate")]
+    partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.15")
+                .HasAnnotation("ProductVersion", "6.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("EmployeesList.Models.Children", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateОfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Patronymic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Children");
+                });
 
             modelBuilder.Entity("EmployeesList.Models.Employee", b =>
                 {
@@ -50,6 +81,18 @@ namespace EmployeesList.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("EmployeesList.Models.Children", b =>
+                {
+                    b.HasOne("EmployeesList.Models.Employee", null)
+                        .WithMany("Childrens")
+                        .HasForeignKey("EmployeeId");
+                });
+
+            modelBuilder.Entity("EmployeesList.Models.Employee", b =>
+                {
+                    b.Navigation("Childrens");
                 });
 #pragma warning restore 612, 618
         }

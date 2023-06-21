@@ -12,7 +12,9 @@ namespace EmployeesList.Interfaces
         Task CreateEmployee(Employee employee);
         Task UpdateEmployee(Employee employee);
         Task RemoveEmployee(int? id);
-        Task<List<Children>> GetChildren();
+        Task<List<Children>> GetChildren(int employeeId);
+        Task CreateChildren(Children children);
+
 
 
 

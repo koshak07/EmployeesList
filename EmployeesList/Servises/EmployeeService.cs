@@ -2,11 +2,17 @@
 using EmployeesList.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 using Microsoft.EntityFrameworkCore;
+
 using EmployeesList.Data;
+
 using EmployeesList.Models;
+
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EmployeesList.Servises
@@ -15,12 +21,10 @@ namespace EmployeesList.Servises
 
     {
         private ApplicationContext _context;
-        
 
         public EmployeeService(ApplicationContext context)
         {
             _context = context;
-           
         }
 
         public async Task<List<Employee>> GetEmployees()
@@ -28,10 +32,13 @@ namespace EmployeesList.Servises
             return await _context.Employee.ToListAsync();
         }
 
+        public async Task<List<Children>> GetChildren(int id)
+        {
+            return await _context.Children.Where(p => p.EmployeeId == id).ToListAsync();
+        }
+
         public async Task<Employee> GetEmployee(int? id)
         {
-
-
             var employee = await _context.Employee
                 .FindAsync(id);
             if (employee == null)
@@ -41,40 +48,46 @@ namespace EmployeesList.Servises
 
             return employee;
         }
+
         public async Task CreateEmployee(Employee employee)
         {
-
             _context.Add(employee);
             await _context.SaveChangesAsync();
-
         }
+
+        public async Task CreateChildren(Children children)
+        {
+            _context.Add(children);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateEmployee(Employee employee)
         {
-                try
+            try
+            {
+                _context.Update(employee);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmployeeExists(employee.Id))
                 {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
+                    return;
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+            }
         }
+
         private bool EmployeeExists(int id)
         {
             return (_context.Employee?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
         public async Task RemoveEmployee(int? id)
         {
-
-
             var employee = await _context.Employee.FindAsync(id);
             if (employee != null)
             {
@@ -83,13 +96,5 @@ namespace EmployeesList.Servises
 
             await _context.SaveChangesAsync();
         }
-
-        public async Task<List<Children>> GetChildren()
-        {
-            return await _context.Children.ToListAsync();
-        }
     }
-    }
-
-
-
+}

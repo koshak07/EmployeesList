@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EmployeesList.Models
 {
@@ -17,6 +18,7 @@ namespace EmployeesList.Models
         [DataType(DataType.Date)]
         public DateTime DateОfBirth { get; set; }
 
-        public Guid ParentId { get; set; }
+        public int EmployeeId { get; set; }
+        
     }
 }
