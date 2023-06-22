@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<EmployeesList.Models.Employee>
 
 @{
-    ViewData["Title"] = "List Employees";
+    ViewData["Title"] = "Employees List";
+    var count = ViewData["count"];
+
 }
 
-<h1>List Employees</h1>
+<h1>Employees List</h1>
 
 <p>
     <a asp-action="Create">Create Employee</a>
@@ -19,10 +21,14 @@
                 <th>
                     Ф.И.О.
                 </th>
+                <th>
+                    Count children
+                </th>
 
                 <th>
                     @Html.DisplayNameFor(model => model.DateОfBirth)
                 </th>
+
                 <th>
                     @Html.DisplayNameFor(model => model.Position)
                 </th>
@@ -40,6 +46,9 @@
                         <a asp-action="IndexChild" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Fullname)</a>
                     </td>
 
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Childrens.Count)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DateОfBirth)
                     </td>

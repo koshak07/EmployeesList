@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using EmployeesList.Data;
+﻿using EmployeesList.Interfaces;
 using EmployeesList.Models;
-using EmployeesList.Servises;
-using EmployeesList.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeesList.Controllers
 
@@ -24,6 +16,7 @@ namespace EmployeesList.Controllers
             this.employeeService = employeeService;
         }
 
+        //get employee list
         public async Task<IActionResult> Index()
         {
             var result = await employeeService.GetEmployees();
@@ -31,9 +24,12 @@ namespace EmployeesList.Controllers
             return View(result);
         }
 
+        //get child list
         public async Task<IActionResult> IndexChild(int id)
         {
             var result = await employeeService.GetChildren(id);
+            ViewData["id"] = id;
+            ViewData["count"] = result.Count;
 
             return View(result);
         }
@@ -42,7 +38,7 @@ namespace EmployeesList.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var employee = await employeeService.GetEmployee(id);
-            ViewData["Emploee"] = employee;
+            ViewData["Employee"] = employee;
             if (employee == null)
             {
                 return NotFound();
@@ -57,14 +53,14 @@ namespace EmployeesList.Controllers
             return View();
         }
 
+        // GET: Child/Create
         public IActionResult CreateChild(int id)
         {
             return View(new Children { EmployeeId = id, Id = Guid.NewGuid() });
         }
 
         // POST: Employees/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Patronymic,Surname,DateОfBirth,Position,Childrens")] Employee employee)
@@ -74,24 +70,26 @@ namespace EmployeesList.Controllers
                 await employeeService.CreateEmployee(employee);
                 return RedirectToAction(nameof(Index));
             }
-            //добавить проверку на одинаковых пользователей
             return View(employee);
         }
 
+        // POST: Child/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateChild([Bind("Id,Name,Patronymic,Surname,DateОfBirth,EmployeeId")] Children children)
+        public async Task<IActionResult> CreateChild([Bind(
+            "Id,Name,Patronymic,Surname,DateОfBirth,EmployeeId")] Children children)
         {
             if (ModelState.IsValid)
             {
                 await employeeService.CreateChildren(children);
-                return RedirectToAction(nameof(IndexChild));
+                return RedirectToAction(nameof(IndexChild), new { id = children.EmployeeId });
             }
-            //добавить проверку на одинаковых пользователей
+
             return View(children);
         }
 
-        // GET: Employees/Edit/5
+        // GET: Employees/Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -107,9 +105,24 @@ namespace EmployeesList.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // GET: Children/Edit
+        public async Task<IActionResult> EditChild(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var child = await employeeService.GetChild(id);
+            if (child == null)
+            {
+                return NotFound();
+            }
+            return View(child);
+        }
+
+        // POST: Employees/Edit
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Patronymic,Surname,DateОfBirth,Position")] Employee employee)
@@ -128,7 +141,27 @@ namespace EmployeesList.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Delete/5
+        // POST: Child/Edit
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditChild(Guid id, [Bind("Id,Name,Patronymic,Surname,DateОfBirth,EmployeeId")] Children children)
+        {
+            if (id != children.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                await employeeService.UpdateChild(children);
+
+                return RedirectToAction(nameof(IndexChild), new { id = children.EmployeeId });
+            }
+            return View(children);
+        }
+
+        // GET: Employees/Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -145,18 +178,50 @@ namespace EmployeesList.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Delete/5
+        // GET: Child/Delete
+        public async Task<IActionResult> DeleteChild(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var child = await employeeService.GetChild(id);
+            if (child == null)
+            {
+                return NotFound();
+            }
+
+            return View(child);
+        }
+
+        // POST: Employees/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            if (Models.Employee.Equals == null)
+            if (Employee.Equals == null)
             {
-                return Problem("Entity set 'EmployeesListContext.Employee'  is null.");
+                return Problem("Entity set 'ApplicationContext.Employee'  is null.");
             }
             await employeeService.RemoveEmployee(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Child/Delete
+        [HttpPost, ActionName("DeleteChild")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid? id)
+        {
+            if (Children.Equals == null)
+            {
+                return Problem("Entity set 'ApplicationContext.Children'  is null.");
+            }
+            var child = await employeeService.GetChild(id);
+            await employeeService.RemoveChild(id);
+
+            return RedirectToAction(nameof(IndexChild), new { id = child.EmployeeId });
         }
     }
 }

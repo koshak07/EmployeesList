@@ -1,13 +1,14 @@
 ﻿@model IEnumerable<EmployeesList.Models.Children>
 
 @{
-    ViewData["Title"] = "Create Child";
+    ViewData["Title"] = "Child List";
+    var emloyeeId = ViewData["id"];
 }
 
 <h1>Child List</h1>
 
 <p>
-    <a asp-action="CreateChild">Create New Child </a>
+    <a asp-action="CreateChild" asp-route-id="@emloyeeId">Create New Child </a>
 </p>
 
 
@@ -36,7 +37,7 @@
             {
                 <tr>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" >@Html.DisplayFor(modelItem => item.Fullname)</a>
+                        @Html.DisplayFor(modelItem => item.Fullname)
                     </td>
 
                     <td>
@@ -44,16 +45,19 @@
                     </td>
 
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="EditChild" asp-route-id="@item.Id">Edit</a> |
+
+                        <a asp-action="DeleteChild" asp-route-id="@item.Id">Delete</a>
                     </td>
-                        <a asp-action="Details" asp-route-id="@item.EmployeeId">Back To Parents</a> 
                 </tr>
             }
+            <a asp-action="Details" asp-route-id="@emloyeeId">Back To Parents</a>
 
         </tbody>
     </table>
+    <p>
+        <a asp-action="CreateChild" asp-route-id="@emloyeeId">Create New Child </a>
+    </p>
 }
 else
 {

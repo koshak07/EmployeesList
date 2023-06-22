@@ -5,9 +5,9 @@
 @{
 
     ViewData["Title"] = "Details";
-    var childrens = (IEnumerable<Children>)ViewData["Emloyee"];
-}
     
+}
+
 
 <h1>Details</h1>
 
@@ -15,147 +15,49 @@
     <h4>Employee</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Patronymic)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Patronymic)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Surname)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Surname)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DateОfBirth)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateОfBirth)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Position)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Position)
         </dd>
-        
+
 
     </dl>
-    @if (childrens?.Count() > 0)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(childrens => childrens.Fullname)
-                    </th>
-
-                    <th>
-                        @Html.DisplayNameFor(childrens => childrens.DateОfBirth)
-                    </th>
-
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                else
-                {
-                <h3>Нет данных для отображения</h3>
-                }
-
-
-                @foreach (var item in childrens)
-                {
-                    <tr>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(item => item.Fullname)</a>
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(item => item.DateОfBirth)
-                        </td>
-
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-
-            </tbody>
-        </table>
-    }
-    else
-    {
+   
+    
         <p>
             <a asp-action="CreateChild" asp-route-id="@Model.Id">Create New Children</a>
         </p>
-    }
+    
 
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
 
-@*<div>
-    @if (childrens?.Count() > 0 )
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Ф.И.О.
-                    </th>
-
-                    <th>
-                        @Html.DisplayNameFor(childrens => childrens.DateОfBirth)
-                    </th>
-                    
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                else
-                {
-                <h3>Нет данных для отображения</h3>
-                }
-
-
-                @foreach (var item in childrens)
-                {
-                    <tr>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(item => item.Fullname)</a>
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(item => item.DateОfBirth)
-                        </td>
-                        
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>
-            <a asp-action="CreateChild">Create New Children</a>
-        </p>
-    }
-</div>*@
